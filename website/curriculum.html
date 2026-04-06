@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++ Masterclass | C4 Knowledge Seekers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/jpeg" href="./image.jpg">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+        .card-hover:hover { transform: translateY(-5px); border-color: #2563eb; shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .hidden-card { display: none; }
+        #fileModal { transition: opacity 0.3s ease; }
+        .modal-content { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); transform: translateY(50px); }
+        #fileModal:not(.hidden) .modal-content { transform: translateY(0); }
+        /* Ensure icons have a default size if they don't load instantly */
+        svg.lucide { width: 24px; height: 24px; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+    <nav class="bg-white border-b border-gray-100 px-8 py-4 flex justify-between items-center sticky top-0 z-50">
+        <a href="./index.html" class="flex items-center gap-2 font-black text-blue-600 hover:opacity-70 transition">
+            <i data-lucide="arrow-left"></i> BACK TO HOME
+        </a>
+        <a href="./index.html"><div class="font-black text-xl tracking-tighter italic">C4 <span class="text-blue-600">CURRICULUM</span></div></a>
+    </nav>
+
+    <header class="py-16 px-6 bg-white border-b border-gray-100">
+        <div class="max-w-5xl mx-auto text-center">
+            <h1 class="text-4xl md:text-5xl font-black mb-4 tracking-tight">C++ Learning Path</h1>
+            <p class="text-gray-500 text-lg mb-8 max-w-2xl mx-auto">Explore source code and notes. Click any module to preview.</p>
+            <div class="relative max-w-xl mx-auto">
+                <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
+                <input type="text" id="moduleSearch" placeholder="Search topics..." 
+                       class="w-full pl-12 pr-4 py-4 rounded-2xl border-2 border-gray-100 focus:border-blue-600 outline-none transition-all font-semibold shadow-sm">
+            </div>
+        </div>
+    </header>
+
+    <section class="py-12 px-6">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="moduleGrid">
+            
+            <div data-file="./Practical File/index.html" class="module-card card-hover bg-white p-8 rounded-[2rem] border-2 border-transparent shadow-sm">
+                <div class="bg-slate-100 text-slate-600 w-12 h-12 rounded-xl flex items-center justify-center mb-6">
+                    <i data-lucide="book-open"></i>
+                </div>
+                <h3 class="text-xl font-black mb-2">Index</h3>
+                <p class="text-gray-500 text-sm">Table of contents and roadmap.</p>
+            </div>
+
+            <div data-file="./Practical File/basic.html" class="module-card card-hover bg-white p-8 rounded-[2rem] border-2 border-transparent shadow-sm">
+                <div class="bg-blue-50 text-blue-600 w-12 h-12 rounded-xl flex items-center justify-center mb-6">
+                    <i data-lucide="terminal"></i>
+                </div>
+                <h3 class="text-xl font-black mb-2">Basics</h3>
+                <p class="text-gray-500 text-sm">Syntax, Data Types, and Variables.</p>
+            </div>
+            
+            <div data-file="./Practical File/array1d.html" class="module-card card-hover bg-white p-8 rounded-[2rem] border-2 border-transparent shadow-sm">
+                <div class="bg-cyan-50 text-cyan-600 w-12 h-12 rounded-xl flex items-center justify-center mb-6">
+                    <i data-lucide="list"></i>
+                </div>
+                <h3 class="text-xl font-black mb-2">1D Arrays</h3>
+                <p class="text-gray-500 text-sm">Linear data storage and indexing.</p>
+            </div>
+
+            <div data-file="./Practical File/array2d.html" class="module-card card-hover bg-white p-8 rounded-[2rem] border-2 border-transparent shadow-sm">
+                <div class="bg-sky-50 text-sky-600 w-12 h-12 rounded-xl flex items-center justify-center mb-6">
+                    <i data-lucide="layout-grid"></i>
+                </div>
+                <h3 class="text-xl font-black mb-2">2D Arrays</h3>
+                <p class="text-gray-500 text-sm">Matrices and multi-dimensional data.</p>
+            </div>
+
+            <div data-file="./Practical File/oops.html" class="module-card card-hover bg-white p-8 rounded-[2rem] border-2 border-transparent shadow-sm">
+                <div class="bg-purple-50 text-purple-600 w-12 h-12 rounded-xl flex items-center justify-center mb-6">
+                    <i data-lucide="box"></i>
+                </div>
+                <h3 class="text-xl font-black mb-2">OOPs Concepts</h3>
+                <p class="text-gray-500 text-sm">Classes, Objects, and Encapsulation.</p>
+            </div>
+
+            <div data-file="./Practical File/inheritance.html" class="module-card card-hover bg-white p-8 rounded-[2rem] border-2 border-transparent shadow-sm">
+                <div class="bg-orange-50 text-orange-600 w-12 h-12 rounded-xl flex items-center justify-center mb-6">
+                    <i data-lucide="git-branch"></i>
+                </div>
+                <h3 class="text-xl font-black mb-2">Inheritance</h3>
+                <p class="text-gray-500 text-sm">Base and Derived architectures.</p>
+            </div>
+
+            <div data-file="./Practical File/virtual.html" class="module-card card-hover bg-white p-8 rounded-[2rem] border-2 border-transparent shadow-sm">
+                <div class="bg-green-50 text-green-600 w-12 h-12 rounded-xl flex items-center justify-center mb-6">
+                    <i data-lucide="ghost"></i>
+                </div>
+                <h3 class="text-xl font-black mb-2">Virtual Functions</h3>
+                <p class="text-gray-500 text-sm">Polymorphism and Runtime Binding.</p>
+            </div>
+
+            <div data-file="./Practical File/function.html" class="module-card card-hover bg-white p-8 rounded-[2rem] border-2 border-transparent shadow-sm">
+                <div class="bg-red-50 text-red-600 w-12 h-12 rounded-xl flex items-center justify-center mb-6">
+                    <i data-lucide="code-2"></i>
+                </div>
+                <h3 class="text-xl font-black mb-2">Functions</h3>
+                <p class="text-gray-500 text-sm">Methods, Parameters, and Scope.</p>
+            </div>
+
+            <div data-file="./Practical File/string.html" class="module-card card-hover bg-white p-8 rounded-[2rem] border-2 border-transparent shadow-sm">
+                <div class="bg-yellow-50 text-yellow-600 w-12 h-12 rounded-xl flex items-center justify-center mb-6">
+                    <i data-lucide="type"></i>
+                </div>
+                <h3 class="text-xl font-black mb-2">Strings</h3>
+                <p class="text-gray-500 text-sm">Text manipulation and string class.</p>
+            </div>
+
+            <div data-file="./Practical File/overloading.html" class="module-card card-hover bg-white p-8 rounded-[2rem] border-2 border-transparent shadow-sm">
+                <div class="bg-indigo-50 text-indigo-600 w-12 h-12 rounded-xl flex items-center justify-center mb-6">
+                    <i data-lucide="layers"></i>
+                </div>
+                <h3 class="text-xl font-black mb-2">Overloading</h3>
+                <p class="text-gray-500 text-sm">Operator and Function logic.</p>
+            </div>
+
+            <div data-file="./Practical File/data.html" class="module-card card-hover bg-white p-8 rounded-[2rem] border-2 border-transparent shadow-sm">
+                <div class="bg-pink-50 text-pink-600 w-12 h-12 rounded-xl flex items-center justify-center mb-6">
+                    <i data-lucide="database"></i>
+                </div>
+                <h3 class="text-xl font-black mb-2">Data Handling</h3>
+                <p class="text-gray-500 text-sm">Memory management and structures.</p>
+            </div>
+
+            <div data-file="./Practical File/file.html" class="module-card card-hover bg-white p-8 rounded-[2rem] border-2 border-transparent shadow-sm">
+                <div class="bg-emerald-50 text-emerald-600 w-12 h-12 rounded-xl flex items-center justify-center mb-6">
+                    <i data-lucide="files"></i>
+                </div>
+                <h3 class="text-xl font-black mb-2">File I/O</h3>
+                <p class="text-gray-500 text-sm">Reading and writing to external files.</p>
+            </div>
+        </div>
+    </section>
+
+    <div id="fileModal" class="fixed inset-0 z-[100] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 md:p-8">
+        <div class="modal-content bg-white w-full h-full max-w-6xl rounded-[2rem] overflow-hidden flex flex-col shadow-2xl">
+            <div class="p-4 border-b flex justify-between items-center bg-gray-50">
+                <button onclick="closeModal()" class="flex items-center gap-2 font-black text-blue-600 hover:bg-blue-100 px-6 py-3 rounded-2xl transition-all">
+                    <i data-lucide="chevron-left"></i> BACK TO MODULES
+                </button>
+                <span id="modalTitle" class="font-black text-gray-400 uppercase tracking-[0.2em] text-xs">Module Preview</span>
+                <div class="w-20 hidden md:block"></div>
+            </div>
+            <div class="flex-grow bg-white">
+                <iframe id="fileFrame" src="" class="w-full h-full border-none"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Ensure Lucide is initialized after the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+
+        const searchInput = document.getElementById('moduleSearch');
+        const cards = document.querySelectorAll('.module-card');
+        const modal = document.getElementById('fileModal');
+        const frame = document.getElementById('fileFrame');
+        const modalTitle = document.getElementById('modalTitle');
+
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            cards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                card.classList.toggle('hidden-card', !title.includes(term));
+            });
+        });
+
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                const filePath = card.getAttribute('data-file');
+                const title = card.querySelector('h3').textContent;
+                modalTitle.textContent = title;
+                frame.src = filePath;
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            frame.src = "";
+            document.body.style.overflow = 'auto';
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Topic-Wise MCQ Questions | C4 Knowledge Seekers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="icon" type="image/png" href="./image.jpg">
+    <link rel="apple-touch-icon" href="./image.jpg">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F9FAFB; overflow-x: hidden; }
+        .mcq-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); border: 2px solid #f3f4f6; }
+        .mcq-card:hover { transform: translateY(-8px); border-color: #2563eb; box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.1); }
+        #resultCount { transition: all 0.3s ease; }
+        #mobileMenu, #quizOverlay { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .menu-open { transform: translateX(0) !important; }
+        .quiz-open { transform: translateY(0) !important; }
+        .option-btn { transition: all 0.2s ease; border: 2px solid #f3f4f6; }
+        .option-btn:hover:not(:disabled) { border-color: #2563eb; background-color: #eff6ff; }
+        .option-correct { background-color: #dcfce7 !important; border-color: #22c55e !important; color: #166534; }
+        .option-wrong { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b; }
+    </style>
+</head>
+<body class="leading-relaxed">
+
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 px-4 md:px-8 py-4 flex justify-between items-center">
+         <a href="./index.html" class="group flex items-center gap-3">
+            <div class="relative flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-200 group-hover:scale-105 transition-transform">
+                <i data-lucide="zap" class="absolute -right-1 -top-1 h-4 w-4 fill-yellow-400 text-yellow-400"></i>
+                <span class="text-xl font-black tracking-tighter">C4</span>
+            </div>
+            <div class="flex flex-col leading-none">
+                <span class="text-lg font-black tracking-tight text-gray-900">Knowledge</span>
+                <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-600">Seekers</span>
+            </div>
+        </a>
+        <div class="hidden lg:flex gap-10 font-bold text-gray-500 text-sm uppercase tracking-wide">
+            <a href="./index.html" class="hover:text-blue-600 transition">Home</a>
+            <a href="./mcq.html" class="text-blue-600 border-b-2 border-blue-600">MCQ Test</a>
+            <a href="./pyq.html" class="hover:text-blue-600 transition">PYQ Papers</a>
+            <a href="./practice.html" class="hover:text-blue-600 transition">Practice</a>
+        </div>
+        <div class="flex items-center gap-4">
+            <a href="index.html#about-section" class="hidden md:block bg-blue-600 text-white px-8 py-2.5 rounded-full font-bold shadow-lg shadow-blue-100 active:scale-95 transition-all text-center">About Us</a>
+            <button id="menuToggle" class="lg:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div id="mobileMenu" class="fixed inset-y-0 right-0 z-[100] w-full max-w-sm bg-white shadow-2xl translate-x-full lg:hidden">
+        <div class="p-6 flex justify-between items-center border-b">
+            <span class="text-xl font-black text-blue-600">Menu</span>
+            <button id="menuClose" class="p-2 text-gray-600"><i data-lucide="x"></i></button>
+        </div>
+        <div class="flex flex-col p-8 gap-6 text-xl font-bold">
+            <a href="index.html">Home</a>
+            <a href="./mcq.html" class="text-blue-600">MCQ Test</a>
+            <a href="./pyq.html">PYQ Papers</a>
+            <a href="./practice.html">Practice Questions</a>
+            <hr>
+            <button class="bg-blue-600 text-white py-4 rounded-2xl font-black">About Us</button>
+        </div>
+    </div>
+
+    <div id="pageContent">
+        <header class="py-12 md:py-20 px-6 text-center bg-white">
+            <div class="max-w-4xl mx-auto">
+                <span class="bg-blue-50 text-blue-700 px-5 py-2 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest mb-6 inline-block border border-blue-100">Practice MCQ Tests</span>
+                <h1 class="text-3xl md:text-6xl font-black mb-6 text-gray-900 tracking-tight leading-tight">Topic-Wise <span class="text-blue-600">MCQ Questions</span></h1>
+                <p class="text-gray-500 text-base md:text-xl font-medium max-w-2xl mx-auto">Evaluate your core CS concepts with our interactive test modules.</p>
+            </div>
+        </header>
+
+        <section class="py-8 md:py-12 px-6">
+            <div class="max-w-2xl mx-auto relative group">
+                <div class="absolute inset-y-0 left-5 flex items-center pointer-events-none"><i data-lucide="search" class="text-gray-400 group-focus-within:text-blue-600 w-5 h-5 md:w-6 md:h-6 transition-colors"></i></div>
+                <input type="text" id="subjectSearch" placeholder="Search for a subject..." class="w-full pl-14 md:pl-16 pr-6 py-4 md:py-5 rounded-[2rem] bg-white border-2 border-gray-100 shadow-sm focus:outline-none focus:border-blue-600 transition-all font-semibold text-gray-700 text-base md:text-lg">
+            </div>
+        </section>
+
+        <section class="py-8 md:py-12 px-4 md:px-6 max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row items-center justify-between mb-8 md:mb-12 border-b border-gray-100 pb-8 gap-4">
+                <h2 class="text-2xl md:text-3xl font-black text-gray-900">All Subjects</h2>
+                <div id="resultCount" class="bg-blue-600 text-white px-6 py-2 rounded-xl font-black text-xs md:text-sm shadow-lg shadow-blue-200"><span id="counterNum">13</span> Categories</div>
+            </div>
+            <div id="subjectsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"></div>
+            <div id="noResults" class="hidden text-center py-20 md:py-32">
+                <div class="bg-gray-100 w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mx-auto mb-6"><i data-lucide="search-x" class="w-8 h-8 md:w-10 md:h-10 text-gray-400"></i></div>
+                <h3 class="text-xl md:text-2xl font-black text-gray-400">No matching subjects found</h3>
+            </div>
+        </section>
+    </div>
+
+    <div id="quizOverlay" class="fixed inset-0 z-[150] bg-white translate-y-full overflow-y-auto">
+        <div class="max-w-3xl mx-auto px-6 py-12">
+            <div class="flex justify-between items-center mb-10">
+                <button onclick="closeQuiz()" class="text-gray-400 font-bold hover:text-red-500 transition flex items-center gap-2"><i data-lucide="arrow-left"></i> Exit Test</button>
+                <div class="bg-blue-50 text-blue-600 px-4 py-1 rounded-full font-black text-sm" id="quizProgress">0/20</div>
+            </div>
+
+            <div id="quizContainer">
+                <h2 id="quizTopic" class="text-blue-600 font-black uppercase tracking-widest text-xs mb-4 text-center">SUBJECT</h2>
+                <h3 id="questionText" class="text-2xl md:text-3xl font-black text-gray-900 mb-8 leading-tight text-center">Question?</h3>
+                <div id="optionsGrid" class="grid grid-cols-1 gap-4 mb-10"></div>
+                <div class="flex justify-center">
+                    <button id="nextBtn" onclick="nextQuestion()" class="hidden bg-blue-600 text-white px-10 py-4 rounded-2xl font-black shadow-lg shadow-blue-200 active:scale-95 transition-all">Next Question</button>
+                    <button id="finishBtn" onclick="showResults()" class="hidden bg-green-600 text-white px-10 py-4 rounded-2xl font-black shadow-lg active:scale-95 transition-all">Finish Test</button>
+                </div>
+            </div>
+
+            <div id="resultView" class="hidden text-center py-10">
+                <div class="w-24 h-24 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6"><i data-lucide="award" class="w-12 h-12"></i></div>
+                <h2 class="text-4xl font-black mb-2">Test Complete!</h2>
+                <p class="text-gray-500 text-xl mb-8">Score: <span id="finalScore" class="text-blue-600 font-black">0</span> / 20</p>
+                <button onclick="closeQuiz()" class="bg-blue-600 text-white px-10 py-4 rounded-2xl font-black shadow-lg">Return to Subjects</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-gray-950 text-white py-16 md:py-20 px-8">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 text-center md:text-left">
+        <div class="md:col-span-2 flex flex-col items-center md:items-start">
+            <div class="flex items-center gap-3 mb-8">
+               <div class="relative flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-200 group-hover:scale-105 transition-transform">
+                <i data-lucide="zap" class="absolute -right-1 -top-1 h-4 w-4 fill-yellow-400 text-yellow-400"></i>
+                <span class="text-xl font-black tracking-tighter">C4</span>
+            </div>
+                <span class="text-2xl font-black tracking-tight text-white">Knowledge Seekers</span>
+            </div>
+            <p class="text-gray-400 text-sm md:text-lg max-w-sm">Empowering the next generation of IT leaders with free resources.</p>
+        </div>
+
+        <div>
+            <h4 class="text-lg font-black mb-6 text-white">Explore</h4>
+            <ul class="text-gray-400 space-y-4 font-semibold text-sm">
+                <li><a href="./mcq.html" class="hover:text-blue-500 transition-colors">MCQ Quizzes</a></li>
+                <li><a href="./pyq.html" class="hover:text-blue-500 transition-colors">PYQ Papers</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h4 class="text-lg font-black mb-6 text-white">Connect</h4>
+            <div class="flex justify-center md:justify-start gap-4">
+                <a href="#" target="_blank" 
+                   class="bg-white/10 w-12 h-12 rounded-2xl hover:bg-red-600 hover:scale-110 transition-all duration-300 group border border-white/5 flex items-center justify-center">
+                    <i class="fa fa-youtube-play" style="font-size:24px"></i>
+                </a>
+                
+                <a href="#" target="_blank" 
+                   class="bg-white/10 w-12 h-12 rounded-2xl hover:bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-600 hover:scale-110 transition-all duration-300 group border border-white/5 flex items-center justify-center">
+                    <i class="fa fa-instagram" style="font-size:24px"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    <script>
+        const subjects = [
+            { name: "Fundamentals of Computers", icon: "monitor" },
+            { name: "Operating System", icon: "settings" },
+            { name: "Core Java Programming", icon: "coffee" },
+            { name: "Database Management System Using Oracle", icon: "hard-drive" },
+            { name: "Computer Graphics", icon: "image" },
+            { name: "Computer Networks", icon: "network" },
+            { name: "Data Structures", icon: "database" },
+            { name: "C Language", icon: "code-2" },
+            { name: "Python Programming", icon: "terminal" },
+            { name: "UGC-NET (Computer Science)", icon: "graduation-cap" },
+            { name: "Digital System", icon: "cpu" },
+            { name: "Computer System Architecture", icon: "server" },
+            { name: "C++ using Object Oriented Programming", icon: "braces" }
+        ];
+
+        const quizData = {
+            "Fundamentals of Computers": [
+                { q: "Who is known as the Father of Computers?", a: ["Alan Turing", "Charles Babbage", "Bill Gates", "Steve Jobs"], correct: 1 },
+                { q: "What is the brain of the computer system?", a: ["RAM", "Control Unit", "ALU", "CPU"], correct: 3 },
+                { q: "Which of the following is the smallest unit of data?", a: ["Bit", "Byte", "Nibble", "KB"], correct: 0 },
+                { q: "What type of device is a digital camera?", a: ["Input", "Output", "Storage", "Software"], correct: 0 },
+                { q: "MS-Word is an example of which type of software?", a: ["System Software", "Application Software", "OS", "Hardware"], correct: 1 },
+                { q: "Which memory is non-volatile in nature?", a: ["RAM", "Cache", "ROM", "Registers"], correct: 2 },
+                { q: "What is the full form of GUI?", a: ["General User Interface", "Graphical User Interface", "Global User Index", "Graphical Unique Icon"], correct: 1 },
+                { q: "1024 Gigabytes is equal to?", a: ["1 Terabyte", "1 Petabyte", "1 Megabyte", "1 Zettabyte"], correct: 0 },
+                { q: "Which key is used to refresh a web page?", a: ["F1", "F2", "F5", "F10"], correct: 2 },
+                { q: "Binary system uses which two digits?", a: ["1 and 2", "0 and 1", "A and B", "1 and 9"], correct: 1 },
+                { q: "Which unit performs mathematical calculations?", a: ["CU", "ALU", "MU", "CPU"], correct: 1 },
+                { q: "What is the full form of HTTP?", a: ["Hypertext Transfer Protocol", "Hypertext Type Protocol", "High Transfer Process", "Hidden Text Protocol"], correct: 0 },
+                { q: "Hard Disk is a type of?", a: ["Primary Memory", "Secondary Storage", "Temporary Memory", "Cache Memory"], correct: 1 },
+                { q: "Which of these is the fastest memory?", a: ["RAM", "Hard Disk", "Cache Memory", "Optical Disk"], correct: 2 },
+                { q: "What does BIOS stand for?", a: ["Basic Input Output System", "Better Input Output Site", "Binary Input Output System", "Basic Integrated OS"], correct: 0 },
+                { q: "What is the physical part of a computer called?", a: ["Software", "Hardware", "Operating System", "Shareware"], correct: 1 },
+                { q: "Which shortcut is used for Paste?", a: ["Ctrl+P", "Ctrl+X", "Ctrl+V", "Ctrl+C"], correct: 2 },
+                { q: "The process of starting a computer is called?", a: ["Loading", "Starting", "Booting", "Executing"], correct: 2 },
+                { q: "1 Byte is equal to how many bits?", a: ["4 bits", "8 bits", "12 bits", "16 bits"], correct: 1 },
+                { q: "Who invented the first mechanical computer?", a: ["Blaise Pascal", "John von Neumann", "Charles Babbage", "Ada Lovelace"], correct: 2 }
+            ],
+            "Operating System": [
+                { q: "What is the main function of an OS?", a: ["Photo editing", "Resource Management", "Hardware designing", "Electricity control"], correct: 1 },
+                { q: "Which of these is a multi-user, multi-tasking OS?", a: ["MS-DOS", "Windows 95", "Unix", "None"], correct: 2 },
+                { q: "What is 'kernel' in OS?", a: ["A software tool", "The core part of OS", "A hardware chip", "A user interface"], correct: 1 },
+                { q: "What is a deadlock?", a: ["System crash", "Wait-for-infinity state", "Fast processing", "None"], correct: 1 },
+                { q: "Virtual memory is typically located on?", a: ["RAM", "CPU", "Hard Drive", "ROM"], correct: 2 },
+                { q: "Which scheduling algorithm gives the lowest average waiting time?", a: ["FCFS", "Round Robin", "SJF", "Priority"], correct: 2 },
+                { q: "What is a 'process' in OS?", a: ["Program in execution", "A text file", "Hardware instruction", "A peripheral device"], correct: 0 },
+                { q: "Which system call is used to create a new process?", a: ["exec", "fork", "wait", "exit"], correct: 1 },
+                { q: "What is 'swapping'?", a: ["Exchanging hardware", "Moving process to disk", "Replacing keyboard", "None"], correct: 1 },
+                { q: "Fragmentation happens in?", a: ["Memory", "CPU", "Monitor", "Mouse"], correct: 0 },
+                { q: "What is the full form of NTFS?", a: ["New Type File System", "New Technology File System", "Node Tech File System", "Network Type File System"], correct: 1 },
+                { q: "Which of the following is not a real-time OS?", a: ["RTLinux", "VxWorks", "Windows XP", "QNX"], correct: 2 },
+                { q: "What is a 'thread'?", a: ["A physical wire", "Lightweight process", "A heavy program", "A storage unit"], correct: 1 },
+                { q: "SPOOLING is most commonly used in?", a: ["Calculations", "Printing", "Displaying", "Scanning"], correct: 1 },
+                { q: "Which directory contains Linux system configuration files?", a: ["/bin", "/home", "/etc", "/usr"], correct: 2 },
+                { q: "What is an interrupt?", a: ["Power failure", "Signal to CPU", "System error", "User input"], correct: 1 },
+                { q: "Paging is a ________ management scheme.", a: ["File", "Memory", "Device", "Security"], correct: 1 },
+                { q: "The Banker's Algorithm is used for?", a: ["Deadlock avoidance", "Deadlock detection", "Deadlock recovery", "Resource allocation"], correct: 0 },
+                { q: "What is a Shell?", a: ["Hardware part", "Command interpreter", "Part of CPU", "Storage device"], correct: 1 },
+                { q: "Which of these is not an OS?", a: ["Windows", "Android", "Oracle", "iOS"], correct: 2 }
+            ],
+            "Core Java Programming": [
+                { q: "Which component runs the Java program?", a: ["JDK", "JRE", "JVM", "Compiler"], correct: 2 },
+                { q: "Which keyword is used to refer to current object?", a: ["super", "this", "static", "final"], correct: 1 },
+                { q: "What is the return type of a constructor?", a: ["void", "int", "No return type", "Object"], correct: 2 },
+                { q: "Which access specifier has widest visibility?", a: ["private", "public", "protected", "default"], correct: 1 },
+                { q: "Inheritance is achieved by using which keyword?", a: ["implements", "inherits", "extends", "import"], correct: 2 },
+                { q: "How many primitive data types are in Java?", a: ["5", "7", "8", "10"], correct: 2 },
+                { q: "What is the extension of Java bytecode file?", a: [".java", ".exe", ".class", ".txt"], correct: 2 },
+                { q: "Can we overload main() method?", a: ["Yes", "No", "Depends on JDK", "Only in special classes"], correct: 0 },
+                { q: "String in Java is a?", a: ["Primitive type", "Object/Class", "Array", "Method"], correct: 1 },
+                { q: "Which keyword prevents a class from being inherited?", a: ["static", "final", "abstract", "private"], correct: 1 },
+                { q: "Which package is imported by default?", a: ["java.util", "java.io", "java.lang", "java.net"], correct: 2 },
+                { q: "Method overriding is an example of?", a: ["Compile-time polymorphism", "Runtime polymorphism", "Abstraction", "Encapsulation"], correct: 1 },
+                { q: "What is the size of double in Java?", a: ["4 bytes", "8 bytes", "16 bytes", "2 bytes"], correct: 1 },
+                { q: "Which of these is a wrapper class?", a: ["int", "char", "Integer", "float"], correct: 2 },
+                { q: "Which of these is used to handle exceptions?", a: ["try-catch", "if-else", "switch", "for-loop"], correct: 0 },
+                { q: "What is an Interface?", a: ["Concrete class", "Blueprint of class", "Data type", "Library"], correct: 1 },
+                { q: "Which keyword is used to call superclass constructor?", a: ["this()", "parent()", "super()", "base()"], correct: 2 },
+                { q: "Default value of a boolean is?", a: ["true", "false", "null", "0"], correct: 1 },
+                { q: "Java is a ________ language.", a: ["Platform dependent", "Platform independent", "Hardware based", "None"], correct: 1 },
+                { q: "Which of these is not a Java keyword?", a: ["class", "boolean", "volatile", "unsigned"], correct: 3 }
+            ],
+            "Database Management System Using Oracle": [
+                { q: "What is the full form of SQL?", a: ["Simple Query Language", "Structured Query Language", "System Query Language", "Standard Query Language"], correct: 1 },
+                { q: "Which command removes all records from a table?", a: ["DELETE", "DROP", "TRUNCATE", "REMOVE"], correct: 2 },
+                { q: "A Primary Key must be?", a: ["Unique", "Not Null", "Both Unique and Not Null", "Null allowed"], correct: 2 },
+                { q: "Which command adds a new column?", a: ["UPDATE", "ALTER", "INSERT", "ADD"], correct: 1 },
+                { q: "What does DML stand for?", a: ["Data Modeling Language", "Data Manipulation Language", "Data Maker Language", "Direct Message Link"], correct: 1 },
+                { q: "Oracle is a product of?", a: ["Microsoft", "Google", "Oracle Corporation", "IBM"], correct: 2 },
+                { q: "Which operator is used for pattern matching?", a: ["=", "LIKE", "BETWEEN", "IN"], correct: 1 },
+                { q: "What is the default port for Oracle DB?", a: ["8080", "1521", "3306", "5432"], correct: 1 },
+                { q: "Which command saves changes permanently?", a: ["SAVE", "COMMIT", "ROLLBACK", "FINISH"], correct: 1 },
+                { q: "Which join gets all records from both tables?", a: ["Inner Join", "Left Join", "Full Outer Join", "Cross Join"], correct: 2 },
+                { q: "Maximum characters in VARCHAR2?", a: ["2000", "4000", "1000", "8000"], correct: 1 },
+                { q: "Which command undoes the last transaction?", a: ["UNDO", "REDO", "ROLLBACK", "CANCEL"], correct: 2 },
+                { q: "A Primary Key can be NULL?", a: ["Yes", "No", "Only if it is a foreign key", "Depends on OS"], correct: 1 },
+                { q: "Which function counts rows?", a: ["SUM()", "COUNT()", "TOTAL()", "ADD()"], correct: 1 },
+                { q: "Which clause is used for sorting?", a: ["SORT BY", "ORDER BY", "GROUP BY", "WHERE"], correct: 1 },
+                { q: "Oracle SQL uses which symbol for concatenation?", a: ["+", "&", "||", "."], correct: 2 },
+                { q: "The 'WHERE' clause is used for?", a: ["Sorting", "Filtering rows", "Grouping", "Deleting tables"], correct: 1 },
+                { q: "Which of the following is a DDL command?", a: ["SELECT", "CREATE", "INSERT", "UPDATE"], correct: 1 },
+                { q: "A subquery is also known as?", a: ["Nested query", "Joint query", "Simple query", "Fast query"], correct: 0 },
+                { q: "A primary key should be...", a: ["Stable", "Numeric only", "Visible", "None"], correct: 0 }
+            ],
+            "Computer Graphics": [
+            { q: "Which algorithm is used for line drawing?", a: ["Bresenham's", "Sutherland-Hodgeman", "Scan-line", "Flood-fill"], correct: 0 },
+            { q: "What is the smallest addressable unit on a screen?", a: ["Pixel", "Point", "Resolution", "Dot"], correct: 0 },
+            { q: "Which of the following is a 2D transformation?", a: ["Translation", "Rotation", "Scaling", "All of the above"], correct: 3 },
+            { q: "What is the process of extracting a portion of an image called?", a: ["Transformation", "Clipping", "Projection", "Mapping"], correct: 1 },
+            { q: "A video-compressed image is called?", a: ["JPEG", "MPEG", "TIFF", "BMP"], correct: 1 },
+            { q: "Which color model is used for printing?", a: ["RGB", "CMYK", "HSV", "YIQ"], correct: 1 },
+            { q: "Aspect ratio is usually defined as?", a: ["Height/Width", "Width/Height", "Area", "Perimeter"], correct: 1 },
+            { q: "Persistence is the term used for?", a: ["Brightness", "Color", "Duration of glow", "Refresh rate"], correct: 2 },
+            { q: "The technique used to smooth jagged edges is?", a: ["Dithering", "Anti-aliasing", "Filtering", "Masking"], correct: 1 },
+            { q: "Which projection does not preserve parallelism?", a: ["Isometric", "Orthographic", "Perspective", "Oblique"], correct: 2 },
+            { q: "A circle can be drawn using which algorithm?", a: ["DDA", "Midpoint", "Cohen-Sutherland", "Bezier"], correct: 1 },
+            { q: "The space in which the image is displayed is?", a: ["World space", "Screen space", "Object space", "User space"], correct: 1 },
+            { q: "CAD stands for?", a: ["Computer Art Design", "Computer Aided Design", "Calculated Art Design", "Complex Aided Design"], correct: 1 },
+            { q: "What is the primary color set in RGB?", a: ["Red, Green, Blue", "Red, Gold, Black", "Rose, Green, Brown", "Red, Grey, Blue"], correct: 0 },
+            { q: "Hidden surface removal is used in?", a: ["2D", "3D", "DDA", "Clipping"], correct: 1 },
+            { q: "The light emitting part of a monitor is?", a: ["Lens", "Phosphor", "Liquid Crystal", "Plasma"], correct: 1 },
+            { q: "Which buffer is used for hidden surface removal?", a: ["Frame buffer", "Z-buffer", "Data buffer", "Refresh buffer"], correct: 1 },
+            { q: "Scaling transformation changes the _______ of an object.", a: ["Position", "Shape", "Size", "Color"], correct: 2 },
+            { q: "Reflection is a form of?", a: ["Rotation", "Translation", "Scaling", "None"], correct: 2 },
+            { q: "Which curve is defined by control points?", a: ["Circle", "Bezier", "Line", "Spline"], correct: 1 }
+        ],
+        "Computer Networks": [
+            { q: "How many layers are in the OSI model?", a: ["4", "5", "7", "8"], correct: 2 },
+            { q: "Which layer is responsible for routing?", a: ["Data Link", "Network", "Transport", "Physical"], correct: 1 },
+            { q: "What is the full form of IP?", a: ["Internet Path", "Internal Protocol", "Internet Protocol", "Inter Process"], correct: 2 },
+            { q: "Which protocol is used to browse the web?", a: ["FTP", "HTTP", "SMTP", "DNS"], correct: 1 },
+            { q: "What is the address length of IPv4?", a: ["32 bits", "64 bits", "128 bits", "48 bits"], correct: 0 },
+            { q: "Which device operates at the Physical layer?", a: ["Router", "Bridge", "Hub", "Switch"], correct: 2 },
+            { q: "What does DNS stand for?", a: ["Data Name System", "Digital Network Service", "Domain Name System", "Distributed Node System"], correct: 2 },
+            { q: "Which layer provides end-to-end communication?", a: ["Session", "Presentation", "Transport", "Network"], correct: 2 },
+            { q: "What is the port number for HTTPS?", a: ["80", "443", "21", "25"], correct: 1 },
+            { q: "Which topology uses a central controller?", a: ["Mesh", "Ring", "Bus", "Star"], correct: 3 },
+            { q: "MAC address is also known as?", a: ["IP address", "Physical address", "Network address", "Logical address"], correct: 1 },
+            { q: "Which protocol is connection-oriented?", a: ["UDP", "IP", "TCP", "ICMP"], correct: 2 },
+            { q: "Full form of LAN is?", a: ["Local Area Network", "Link Area Node", "Long Area Network", "Logical Area Network"], correct: 0 },
+            { q: "Error detection is mainly done at which layer?", a: ["Physical", "Network", "Data Link", "Session"], correct: 2 },
+            { q: "What is a 'Gateway'?", a: ["A wire", "A network node connecting two different networks", "A browser", "A security key"], correct: 1 },
+            { q: "The process of converting analog to digital is?", a: ["Modulation", "Demodulation", "Routing", "Switching"], correct: 0 },
+            { q: "Which protocol is used for sending emails?", a: ["POP3", "SMTP", "FTP", "HTTP"], correct: 1 },
+            { q: "What is the range of a Class A IP address?", a: ["0-127", "128-191", "192-223", "224-239"], correct: 0 },
+            { q: "A Firewall is used for?", a: ["Speed", "Security", "Storage", "Sharing"], correct: 1 },
+            { q: "Which layer is responsible for data compression?", a: ["Presentation", "Application", "Session", "Data Link"], correct: 0 }
+        ],
+        "Data Structures": [
+            { q: "Which data structure works on LIFO principle?", a: ["Queue", "Stack", "Linked List", "Tree"], correct: 1 },
+            { q: "What is the time complexity of searching in a BST?", a: ["O(1)", "O(n)", "O(log n)", "O(n log n)"], correct: 2 },
+            { q: "Which of these is a non-linear data structure?", a: ["Stack", "Queue", "Array", "Graph"], correct: 3 },
+            { q: "A queue works on which principle?", a: ["LIFO", "FIFO", "FILO", "Random"], correct: 1 },
+            { q: "Which data structure is used in Recursion?", a: ["Queue", "Stack", "Tree", "Linked List"], correct: 1 },
+            { q: "What is the worst-case complexity of Bubble Sort?", a: ["O(n)", "O(n log n)", "O(n²)", "O(1)"], correct: 2 },
+            { q: "A linked list node contains data and ________.", a: ["Array", "Address of next node", "Previous node data", "Index"], correct: 1 },
+            { q: "Height of an empty tree is?", a: ["0", "1", "-1", "Infinite"], correct: 2 },
+            { q: "Which structure uses 'Rear' and 'Front' pointers?", a: ["Stack", "Queue", "Tree", "Graph"], correct: 1 },
+            { q: "A graph without cycles is called?", a: ["Forest", "Acyclic Graph", "Complete Graph", "Bipartite Graph"], correct: 1 },
+            { q: "Which data structure is used for BFS of a graph?", a: ["Stack", "Queue", "Tree", "Heap"], correct: 1 },
+            { q: "What is the result of Inorder traversal of a BST?", a: ["Descending order", "Random order", "Sorted order", "No order"], correct: 2 },
+            { q: "Which of these is a stable sorting algorithm?", a: ["Quick Sort", "Merge Sort", "Heap Sort", "Selection Sort"], correct: 1 },
+            { q: "Minimum number of queues required to implement a stack?", a: ["1", "2", "3", "0"], correct: 1 },
+            { q: "Which data structure is used in priority queues?", a: ["Stack", "Linked List", "Heap", "Array"], correct: 2 },
+            { q: "The index of the first element in an array is?", a: ["1", "0", "-1", "Depends on language"], correct: 1 },
+            { q: "Finding the location of an element is called?", a: ["Traversal", "Searching", "Sorting", "Insertion"], correct: 1 },
+            { q: "In a Doubly Linked List, a node has how many pointers?", a: ["1", "2", "3", "0"], correct: 1 },
+            { q: "Complexity of Binary Search is?", a: ["O(n)", "O(log n)", "O(n²)", "O(1)"], correct: 1 },
+            { q: "A tree where every node has max 2 children is?", a: ["General Tree", "Binary Tree", "B-Tree", "AVL Tree"], correct: 1 }
+        ],
+        "C Language": [
+            { q: "Who developed the C language?", a: ["Dennis Ritchie", "Ken Thompson", "Bjarne Stroustrup", "James Gosling"], correct: 0 },
+            { q: "C is a ________ language.", a: ["High Level", "Low Level", "Middle Level", "Assembly"], correct: 2 },
+            { q: "Which symbol is used to end a statement in C?", a: [":", ".", ";", ","], correct: 2 },
+            { q: "What is the size of 'int' in a 16-bit compiler?", a: ["1 byte", "2 bytes", "4 bytes", "8 bytes"], correct: 1 },
+            { q: "Which keyword is used for a function with no return value?", a: ["null", "empty", "void", "static"], correct: 2 },
+            { q: "What is the output of 'printf('%d', 5/2);'?", a: ["2.5", "2", "3", "Error"], correct: 1 },
+            { q: "A pointer stores the _______ of a variable.", a: ["Value", "Name", "Address", "Type"], correct: 2 },
+            { q: "Which of these is not a keyword in C?", a: ["auto", "main", "extern", "volatile"], correct: 1 },
+            { q: "What is the extension of a C source file?", a: [".cpp", ".obj", ".c", ".h"], correct: 2 },
+            { q: "Which function is used to take input from user?", a: ["printf()", "getc()", "scanf()", "puts()"], correct: 2 },
+            { q: "What is a constant?", a: ["Value that can change", "Value that stays fixed", "A variable", "A keyword"], correct: 1 },
+            { q: "An array index starts from?", a: ["1", "0", "-1", "Any number"], correct: 1 },
+            { q: "Which operator is used for 'AND' logic?", a: ["&", "&&", "|", "||"], correct: 1 },
+            { q: "Which of the following is a loop in C?", a: ["if", "switch", "while", "break"], correct: 2 },
+            { q: "What is 'string' in C?", a: ["Data type", "Array of characters", "Keyword", "Function"], correct: 1 },
+            { q: "Which function allocates memory dynamically?", a: ["malloc()", "alloc()", "new()", "set()"], correct: 0 },
+            { q: "What does 'scanf('%f', &x);' read?", a: ["Integer", "Character", "Float", "String"], correct: 2 },
+            { q: "Which header file is used for printf()?", a: ["conio.h", "math.h", "stdio.h", "string.h"], correct: 2 },
+            { q: "What is a 'union'?", a: ["Same as struct", "Memory shared by members", "A loop", "A pointer"], correct: 1 },
+            { q: "Recursion is a function calling?", a: ["Main", "Itself", "Other function", "Compiler"], correct: 1 }
+        ],
+        "Python Programming": [
+            { q: "Who developed Python?", a: ["Guido van Rossum", "Dennis Ritchie", "James Gosling", "Bjarne Stroustrup"], correct: 0 },
+            { q: "Python is an _______ language.", a: ["Interpreted", "Compiled", "Machine", "Assembly"], correct: 0 },
+            { q: "Which keyword is used to create a function?", a: ["fun", "define", "def", "function"], correct: 2 },
+            { q: "What is the correct file extension for Python?", a: [".py", ".pt", ".pyt", ".python"], correct: 0 },
+            { q: "How do you insert comments in Python?", a: ["//", "/* */", "#", ""], correct: 2 },
+            { q: "Which data type is immutable?", a: ["List", "Dictionary", "Tuple", "Set"], correct: 2 },
+            { q: "What is the output of 'print(2**3)'?", a: ["6", "8", "9", "5"], correct: 1 },
+            { q: "Which method adds an element to a list?", a: ["add()", "insert()", "append()", "plus()"], correct: 2 },
+            { q: "Indentation in Python is used for?", a: ["Aesthetics", "Defining blocks of code", "Comments", "Error handling"], correct: 1 },
+            { q: "What does 'len()' do?", a: ["Finds length", "Deletes", "Sorts", "Prints"], correct: 0 },
+            { q: "Which of these is used for a loop?", a: ["for", "repeat", "foreach", "loop"], correct: 0 },
+            { q: "How do you start a block of code in Python?", a: ["{ }", "( )", "Indentation", "Semicolon"], correct: 2 },
+            { q: "What is 'None' in Python?", a: ["Zero", "Empty string", "Null value", "Boolean False"], correct: 2 },
+            { q: "Which library is used for data analysis?", a: ["Pandas", "Django", "Flask", "PyQt"], correct: 0 },
+            { q: "What is a 'dictionary'?", a: ["List of words", "Key-Value pairs", "Array", "Class"], correct: 1 },
+            { q: "How do you declare a global variable?", a: ["global x", "var x", "set x", "x = global"], correct: 0 },
+            { q: "Python 3 vs Python 2: Which is current?", a: ["Python 2", "Python 3", "Both", "Python 4"], correct: 1 },
+            { q: "What is 'pip'?", a: ["A code editor", "Package installer", "A compiler", "An OS"], correct: 1 },
+            { q: "Which operator is used for floor division?", a: ["/", "//", "%", "**"], correct: 1 },
+            { q: "How do you handle exceptions in Python?", a: ["try-except", "try-catch", "if-else", "error-handle"], correct: 0 }
+        ],
+        "UGC-NET (Computer Science)": [
+            { q: "P and NP classes are part of?", a: ["OS", "Automata Theory", "Networking", "DBMS"], correct: 1 },
+            { q: "A Turing machine is more powerful than?", a: ["Finite Automata", "PDA", "Both", "None"], correct: 2 },
+            { q: "Which layer is not in TCP/IP?", a: ["Internet", "Transport", "Session", "Application"], correct: 2 },
+            { q: "Deadlock is associated with?", a: ["Processes", "Threads", "Resources", "All of these"], correct: 3 },
+            { q: "Software engineering mostly focuses on?", a: ["Coding", "SDLC", "Hardware", "Testing only"], correct: 1 },
+            { q: "Relational Algebra is a ________ language.", a: ["Procedural", "Non-procedural", "Declarative", "High-level"], correct: 0 },
+            { q: "In 1 NF, all attributes must be?", a: ["Primary", "Atomic", "Unique", "Foreign"], correct: 1 },
+            { q: "Artificial Intelligence uses which logic?", a: ["Boolean", "Fuzzy", "Binary", "None"], correct: 1 },
+            { q: "COCOMO model is used for?", a: ["Risk management", "Cost estimation", "Testing", "Design"], correct: 1 },
+            { q: "The Big-O notation measures?", a: ["Size", "Complexity", "Efficiency", "Reliability"], correct: 1 },
+            { q: "Which protocol works at Application layer?", a: ["IP", "TCP", "HTTP", "UDP"], correct: 2 },
+            { q: "A semaphor is a ________.", a: ["Variable", "Function", "Hardware", "Logic gate"], correct: 0 },
+            { q: "Halting problem is?", a: ["Decidable", "Undecidable", "Easy", "Finite"], correct: 1 },
+            { q: "The 'Father of AI' is?", a: ["Alan Turing", "John McCarthy", "Elon Musk", "Bill Gates"], correct: 1 },
+            { q: "Expert systems are part of?", a: ["DBMS", "AI", "OS", "Graphics"], correct: 1 },
+            { q: "A primary key should be?", a: ["Null", "Minimal", "Atomic", "Both Minimal & Atomic"], correct: 3 },
+            { q: "SaaS stands for?", a: ["Software as a Service", "System as a Server", "Secure as a Service", "Site as a System"], correct: 0 },
+            { q: "SQL is used for?", a: ["Designing", "Database manipulation", "Networking", "Hardware"], correct: 1 },
+            { q: "The 'Water-fall' model is?", a: ["Spiral", "Linear", "Agile", "Cyclic"], correct: 1 },
+            { q: "Instruction cycle consists of?", a: ["Fetch-Decode-Execute", "Read-Write", "Start-Stop", "None"], correct: 0 }
+        ],
+        "Digital System": [
+            { q: "Which gate is known as a Universal Gate?", a: ["AND", "OR", "NAND", "NOT"], correct: 2 },
+            { q: "A half adder has how many inputs?", a: ["1", "2", "3", "4"], correct: 1 },
+            { q: "Binary equivalent of decimal 10 is?", a: ["1010", "1100", "1001", "1111"], correct: 0 },
+            { q: "K-Map is used for?", a: ["Addition", "Boolean Simplification", "Storage", "Multiplication"], correct: 1 },
+            { q: "What is the output of an XOR gate with inputs 1, 1?", a: ["1", "0", "None", "Both"], correct: 1 },
+            { q: "Flip-flops are used to store?", a: ["1 bit", "1 byte", "1 KB", "1 nibble"], correct: 0 },
+            { q: "A multiplexer is a ________ device.", a: ["1 to many", "Many to 1", "Many to many", "1 to 1"], correct: 1 },
+            { q: "De Morgan's Theorem deals with?", a: ["Addition", "Complements", "Multiplication", "Logic gates"], correct: 1 },
+            { q: "What is 'TTL'?", a: ["Total Time Logic", "Transistor-Transistor Logic", "Transfer Tech Logic", "Timed Transistor Link"], correct: 1 },
+            { q: "The base of Hexadecimal system is?", a: ["2", "8", "10", "16"], correct: 3 },
+            { q: "A register is a group of?", a: ["Gates", "Flip-flops", "Counters", "Multiplexers"], correct: 1 },
+            { q: "ASCII stands for?", a: ["American Standard Code for Information Interchange", "All Standard Code", "App Standard Code", "Active Standard Code"], correct: 0 },
+            { q: "1's complement of 1010 is?", a: ["0101", "1111", "0000", "1011"], correct: 0 },
+            { q: "Which device converts BCD to Decimal?", a: ["Encoder", "Decoder", "Multiplexer", "Adder"], correct: 1 },
+            { q: "A byte consists of ________ bits.", a: ["4", "8", "16", "32"], correct: 1 },
+            { q: "Gray code is also called?", a: ["Binary code", "Unit distance code", "Weight code", "Error code"], correct: 1 },
+            { q: "Sequential circuits depend on?", a: ["Inputs only", "Inputs and Past state", "Output only", "Past state only"], correct: 1 },
+            { q: "Which gate gives high output only when all inputs are high?", a: ["AND", "OR", "XOR", "NOT"], correct: 0 },
+            { q: "The number of select lines for an 8x1 MUX is?", a: ["2", "3", "4", "8"], correct: 1 },
+            { q: "What is 'fan-out'?", a: ["Power usage", "Number of loads driven", "Cooling fan", "Input signal"], correct: 1 }
+        ],
+        "Computer System Architecture": [
+            { q: "The CPU consists of ALU and _______.", a: ["RAM", "Control Unit", "I/O", "Register"], correct: 1 },
+            { q: "What is the full form of RISC?", a: ["Reduced Instruction Set Computer", "Real Instruction Set Computer", "Rapid Instruction Set Computer", "Reverse Instruction Set Computer"], correct: 0 },
+            { q: "The internal memory of the CPU is?", a: ["RAM", "Registers", "Hard Disk", "Cache"], correct: 1 },
+            { q: "The bus that carries data to/from memory is?", a: ["Address Bus", "Control Bus", "Data Bus", "System Bus"], correct: 2 },
+            { q: "DMA stands for?", a: ["Direct Memory Access", "Digital Memory Access", "Direct Master Access", "Data Memory Access"], correct: 0 },
+            { q: "Cache memory acts between?", a: ["CPU and RAM", "RAM and Disk", "CPU and Disk", "ROM and RAM"], correct: 0 },
+            { q: "Von Neumann architecture is?", a: ["SISD", "SIMD", "MIMD", "MISD"], correct: 0 },
+            { q: "Pipelining increases ________.", a: ["Memory", "Throughput", "Latency", "Accuracy"], correct: 1 },
+            { q: "What is an 'Opcode'?", a: ["Operand", "Operation Code", "Data", "Address"], correct: 1 },
+            { q: "A stack pointer holds the?", a: ["Data", "Address of top of stack", "Instruction", "Flag"], correct: 1 },
+            { q: "Interrupt-driven I/O is more efficient than?", a: ["DMA", "Programmed I/O", "Bus", "Paging"], correct: 1 },
+            { q: "MAR stands for?", a: ["Memory Address Register", "Main Access Register", "Master Address Register", "Memory Active Register"], correct: 0 },
+            { q: "Which memory is used to store BIOS?", a: ["RAM", "ROM", "Cache", "Register"], correct: 1 },
+            { q: "Control Unit is the ________ of the computer.", a: ["Heart", "Brain", "Nervous System", "Storage"], correct: 2 },
+            { q: "Microprogramming was developed by?", a: ["Maurice Wilkes", "John von Neumann", "Alan Turing", "Charles Babbage"], correct: 0 },
+            { q: "What is a 'Bus'?", a: ["A vehicle", "Set of parallel wires", "A chip", "Storage"], correct: 1 },
+            { q: "Which cycle fetches instructions?", a: ["Machine Cycle", "Fetch Cycle", "Instruction Cycle", "Execution Cycle"], correct: 1 },
+            { q: "The speed of CPU is measured in?", a: ["Bits", "Hertz/GHz", "Bytes", "Pixels"], correct: 1 },
+            { q: "RAID is used for?", a: ["CPU Speed", "Disk redundancy/reliability", "RAM speed", "Networking"], correct: 1 },
+            { q: "ALU performs which operations?", a: ["Logic", "Arithmetic", "Both", "None"], correct: 2 }
+        ],
+        "C++ using Object Oriented Programming": [
+            { q: "Who created C++?", a: ["Bjarne Stroustrup", "Dennis Ritchie", "James Gosling", "Ken Thompson"], correct: 0 },
+            { q: "C++ is a ________ language.", a: ["Procedural", "Object Oriented", "Multi-paradigm", "Assembly"], correct: 2 },
+            { q: "Which keyword is used to create a class?", a: ["struct", "object", "class", "def"], correct: 2 },
+            { q: "The process of wrapping data and methods into a single unit is?", a: ["Inheritance", "Polymorphism", "Encapsulation", "Abstraction"], correct: 2 },
+            { q: "A constructor has the same name as?", a: ["Function", "Object", "Class", "Variable"], correct: 2 },
+            { q: "What is a destructor used for?", a: ["Creating objects", "Deleting objects", "Hiding data", "Inheriting"], correct: 1 },
+            { q: "Which operator is used for dynamic memory allocation?", a: ["malloc", "new", "alloc", "create"], correct: 1 },
+            { q: "Inheritance allows code ________.", a: ["Security", "Reuse", "Complexity", "Speed"], correct: 1 },
+            { q: "Private members are accessible?", a: ["Anywhere", "Only within class", "In main only", "In child class"], correct: 1 },
+            { q: "Which symbol is the scope resolution operator?", a: [".", "->", "::", ":"], correct: 2 },
+            { q: "Polymorphism means?", a: ["One name many forms", "Single form", "Hiding data", "Copying objects"], correct: 0 },
+            { q: "A virtual function is used for?", a: ["Inheritance", "Runtime Polymorphism", "Abstraction", "Encapsulation"], correct: 1 },
+            { q: "Friend function can access ________ members.", a: ["Public", "Private", "Protected", "All of these"], correct: 3 },
+            { q: "What is an 'Object'?", a: ["A function", "Instance of a class", "A pointer", "A data type"], correct: 1 },
+            { q: "Which feature of OOP is 'Hiding internal details'?", a: ["Encapsulation", "Polymorphism", "Abstraction", "Inheritance"], correct: 2 },
+            { q: "C++ supports which type of inheritance?", a: ["Single", "Multiple", "Multilevel", "All of these"], correct: 3 },
+            { q: "The 'this' pointer points to?", a: ["Global object", "Current object", "Parent object", "NULL"], correct: 1 },
+            { q: "Standard output stream in C++ is?", a: ["printf", "cin", "cout", "out"], correct: 2 },
+            { q: "A class that cannot be instantiated is?", a: ["Base class", "Abstract class", "Child class", "Friend class"], correct: 1 },
+            { q: "Inline functions reduce ________.", a: ["Overhead of function call", "Code size", "Memory", "Variables"], correct: 0 }
+        ]
+        };
+
+        const grid = document.getElementById('subjectsGrid');
+        const searchInput = document.getElementById('subjectSearch');
+        const counterNum = document.getElementById('counterNum');
+        const noResults = document.getElementById('noResults');
+
+        let currentQuiz = [];
+        let qIndex = 0;
+        let score = 0;
+
+        function renderCards(filter = "") {
+            grid.innerHTML = "";
+            let count = 0;
+            subjects.forEach(subject => {
+                if (subject.name.toLowerCase().includes(filter.toLowerCase())) {
+                    count++;
+                    grid.innerHTML += `
+                        <div class="bg-white p-6 md:p-8 rounded-[2.5rem] mcq-card flex flex-col justify-between group cursor-pointer">
+                            <div class="flex items-start gap-5 mb-6 md:mb-8">
+                                <div class="bg-blue-50 text-blue-600 w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-sm">
+                                    <i data-lucide="${subject.icon}"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-black text-gray-800 leading-tight uppercase text-xs md:text-sm tracking-widest group-hover:text-blue-600 transition-colors">${subject.name}</h3>
+                                    <span class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-2 block">20 Questions</span>
+                                </div>
+                            </div>
+                            <button onclick="startQuiz('${subject.name}')" class="bg-blue-600 hover:bg-blue-700 w-full py-3 md:py-4 rounded-2xl text-white font-black text-xs md:text-sm uppercase tracking-widest shadow-lg active:scale-95 transition-all">
+                                Start Test
+                            </button>
+                        </div>
+                    `;
+                }
+            });
+            counterNum.innerText = count;
+            noResults.classList.toggle('hidden', count > 0);
+            grid.classList.toggle('hidden', count === 0);
+            lucide.createIcons();
+        }
+
+        function startQuiz(topic) {
+            currentQuiz = quizData[topic] || [];
+            if(currentQuiz.length === 0) {
+                alert("Quiz content coming soon for this subject!");
+                return;
+            }
+            qIndex = 0;
+            score = 0;
+            document.getElementById('quizTopic').innerText = topic;
+            document.getElementById('quizOverlay').classList.add('quiz-open');
+            document.getElementById('resultView').classList.add('hidden');
+            document.getElementById('quizContainer').classList.remove('hidden');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const data = currentQuiz[qIndex];
+            document.getElementById('quizProgress').innerText = `${qIndex + 1} / ${currentQuiz.length}`;
+            document.getElementById('questionText').innerText = data.q;
+            document.getElementById('nextBtn').classList.add('hidden');
+            document.getElementById('finishBtn').classList.add('hidden');
+            
+            const optionsGrid = document.getElementById('optionsGrid');
+            optionsGrid.innerHTML = "";
+            data.a.forEach((opt, idx) => {
+                optionsGrid.innerHTML += `
+                    <button onclick="checkAnswer(this, ${idx})" class="option-btn p-5 rounded-2xl text-left font-bold text-gray-700 bg-white">
+                        ${opt}
+                    </button>
+                `;
+            });
+        }
+
+        function checkAnswer(btn, idx) {
+            const correctIdx = currentQuiz[qIndex].correct;
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns.forEach(b => b.disabled = true);
+
+            if (idx === correctIdx) {
+                btn.classList.add('option-correct');
+                score++;
+            } else {
+                btn.classList.add('option-wrong');
+                allBtns[correctIdx].classList.add('option-correct');
+            }
+
+            if (qIndex < currentQuiz.length - 1) {
+                document.getElementById('nextBtn').classList.remove('hidden');
+            } else {
+                document.getElementById('finishBtn').classList.remove('hidden');
+            }
+        }
+
+        function nextQuestion() {
+            qIndex++;
+            loadQuestion();
+        }
+
+        function showResults() {
+            document.getElementById('quizContainer').classList.add('hidden');
+            document.getElementById('resultView').classList.remove('hidden');
+            document.getElementById('finalScore').innerText = score;
+        }
+
+        function closeQuiz() {
+            document.getElementById('quizOverlay').classList.remove('quiz-open');
+        }
+
+        // Search logic
+        searchInput.addEventListener('input', (e) => renderCards(e.target.value));
+
+        // Mobile Menu Logic
+        const menuToggle = document.getElementById('menuToggle');
+        const menuClose = document.getElementById('menuClose');
+        const mobileMenu = document.getElementById('mobileMenu');
+        menuToggle.addEventListener('click', () => { mobileMenu.classList.add('menu-open'); document.body.style.overflow = 'hidden'; });
+        menuClose.addEventListener('click', () => { mobileMenu.classList.remove('menu-open'); document.body.style.overflow = 'auto'; });
+
+        renderCards();
+    </script>
+</body>
+</html>
